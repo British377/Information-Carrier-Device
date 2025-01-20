@@ -1,0 +1,17 @@
+id=InformationCarrierDevice
+name=Information Carrier Device
+version=1.8477.8S
+versionCode=184778
+author=Rinker001, ZerxFox & 永遠先考慮自己
+description=Information Carrier Device
+
+# Version: 1.0000.0
+#          1           - Initial version
+#          0000       - Release version based on tests
+#          0          - The final figure of the last test
+#          T/B/S      - Test, Beta, Stable
+
+# Version Code: 100000
+#          1           - Initial version
+#          0000       - Release version based on tests
+#          0          - The final figure of the last test
