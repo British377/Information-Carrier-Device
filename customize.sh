@@ -12,10 +12,9 @@ echo -e "
 ####################
 echo -e "┃\n┣ Setting up test permissions..."
 set_permissions() {
-    set_perm_recursive $MODPATH 0 0 0777 0755
-    set_perm $MODPATH/system_info.mc1 0 0 0755
-    set_perm $MODPATH/service.sh 0 0 0755
-    set_perm $MODPATH/ICD.sh 0 0 0755
+    set_perm_recursive $MODPATH/system 0 0 0777 0755
+    set_perm $MODPATH/system/bin/bash 0 0 0755
+    set_perm $MODPATH/system/bin/jq 0 0 0755
 }
 set_permissions && sleep 0.8
 echo -e "┃\n┣ Setting permissions successfully...\n┃"
@@ -64,9 +63,11 @@ sleep 0.8
 echo -e "┃\n┣ Setting permissions..."
 set_permissions() {
     set_perm_recursive $MODPATH 0 0 0777 0755
-    set_perm $MODPATH/system_info.mc1 0 0 0755
     set_perm $MODPATH/service.sh 0 0 0755
-    set_perm $MODPATH/ICD.sh 0 0 0755
+    set_perm $MODPATH/collector.sh 0 0 0755
+    set_perm $MODPATH/main.sh 0 0 0755
+    set_perm $MODPATH/LICENCE 0 0 0000
+    set_perm $MODPATH/LICENCE.v2 0 0 0000
 }
 set_permissions && sleep 0.8
 echo -e "┣ Setting permissions successfully...\n┃"
