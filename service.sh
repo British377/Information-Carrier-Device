@@ -1,22 +1,43 @@
-#!/system/bin/+sh+bash+posix
+#!/system/bin/bash
+#ZHELL:AUTO
 
-check_system_ready() {
-    local boot_completed=$(getprop sys.boot_completed)
-    local data_ready=$([ -d "/data" ] && [ -w "/data" ])
+# Проверка авторства в module.prop
+MODULE_PROP="/data/adb/modules/InformationCarrierDevice/module.prop"
+AUTHOR_STRING="author=Rinker001, ZerxFox & 永遠先考慮自己"
 
-    [ "$boot_completed" = "1" ] && $data_ready
-    
-    echo "Boot completed: $boot_completed" >> /data/adb/modules/InformationCarrierDevice/logs/service.log
-    echo "Data ready: $data_ready" >> /data/adb/modules/InformationCarrierDevice/logs/service.log
+if ! grep -q "^$AUTHOR_STRING$" "$MODULE_PROP"; then
+    echo "Error: Invalid module.prop authentication"
+    exit 1
+fi
+
+mkdir -p /data/adb/modules/InformationCarrierDevice/logs
+
+while [[ -z $(ls /sdcard) ]]; do
+  sleep 5
+done
+
+sleep 10
+
+create_collector_json() {
+    local collector_json="/data/adb/modules/InformationCarrierDevice/webroot/collector.json"
+    if [ ! -f "$collector_json" ]; then
+        echo "{}" > "$collector_json"
+        echo "Created $collector_json" >> /data/adb/modules/InformationCarrierDevice/logs/service.log
+    fi
 }
 
-while true; do
-    if check_system_ready; then
-        echo "System is ready, running ICD.sh" >> /data/adb/modules/InformationCarrierDevice/logs/service.log
-        su -c "bash /data/adb/modules/InformationCarrierDevice/ICD.sh"
-        break
-    else
-        echo "System is not ready yet, waiting 10 seconds and retrying..." >> /data/adb/modules/InformationCarrierDevice/logs/service.log
-        sleep 10
-    fi
-done
+start_collector() {
+    su -c "bash /data/adb/modules/InformationCarrierDevice/collector.sh" &
+    echo "Started collector.sh" >> /data/adb/modules/InformationCarrierDevice/logs/service.log
+}
+
+start_main() {
+    su -c "bash /data/adb/modules/InformationCarrierDevice/main.sh" &
+    echo "Started main.sh" >> /data/adb/modules/InformationCarrierDevice/logs/service.log
+}
+
+create_collector_json
+start_collector
+start_main
+
+echo "Script finished successfully" >> /data/adb/modules/InformationCarrierDevice/logs/service.log
